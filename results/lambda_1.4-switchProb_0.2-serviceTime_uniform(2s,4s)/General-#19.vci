@@ -1,0 +1,64 @@
+file 7325035 1686076375                                         
+version 3
+run General-19-20230606-20:32:54-7804
+attr configname General
+attr datetime 20230606-20:32:54
+attr datetimef 20230606-203254
+attr experiment General
+attr inifile HeavyTrafficLimits_lambda_1.4-switchProb_0.2-serviceTime_uniform(2s,4s).ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network HeavyTrafficLimits
+attr processid 7804
+attr repetition 19
+attr replication rep19
+attr resultdir results/lambda_1.4-switchProb_0.2-serviceTime_uniform(2s,4s)
+attr runnumber 19
+attr seedset 19
+config network HeavyTrafficLimits
+config sim-time-limit 100000s
+config repeat 20
+config replication-label rep19
+config result-dir results/lambda_1.4-switchProb_0.2-serviceTime_uniform(2s,4s)
+config warmup-period 30000s
+config **.source.lambda 1.4
+config **.router.switchProbability 0.2
+config **.server1.serviceTime uniform(2s,4s)
+config **.server2.serviceTime uniform(2s,4s)
+config **.server3.serviceTime uniform(2s,4s)
+config **.server1.crashTime 500
+config **.server2.crashTime 750
+config **.server3.crashTime 1000
+config **.server1.queueLength.record true
+config **.server1.serviceTime.record true
+config **.server2.serviceTime.record true
+config **.server3.serviceTime.record true
+
+vector 0 HeavyTrafficLimits.queue1 queueLength:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr title "queue length"
+vector 1 HeavyTrafficLimits.queue3 queueLength:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr title "queue length"
+vector 2 HeavyTrafficLimits.sink lifeTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr title "lifetime of arrived jobs"
+attr unit s
+vector 3 HeavyTrafficLimits.queue2 queueLength:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr title "queue length"
+0	1873 1143229 172951 274838 30000.23412336589 47822.051572521683 32768 28587 45116 1208276892 45299883020488
+0	1145102 1143300 274840 376235 47822.365334472259 65462.344640123034 32768 45117 61812 1751373032 94370699705568
+1	2288402 1112106 172963 462710 30001.383567119863 80518.660351615109 32768 2406 6492 145378580 690550309164
+0	3400508 1143245 376236 477612 65462.694354185158 83126.529792195747 32768 61811 78484 2298340000 1.6196718200165e+14
+0	4543753 1094297 477616 574886 83128.59526500543 99999.881845592484 31365 78483 94476 2713001233 2.353400134825e+14
+1	5638050 427324 462722 574889 80520.855418825698 99999.881845592484 12592 6490 8022 91400190 665778534552
+2	6065374 1178655 172967 574870 30002.067907499437 99997.654219689275 26274 20309.201790429 74808.503159832 1247420669.5708 65083708616031
+3	7244029 81004 173117 574640 30029.91944085752 99952.256236203434 2622 0 2 1313 1315
+

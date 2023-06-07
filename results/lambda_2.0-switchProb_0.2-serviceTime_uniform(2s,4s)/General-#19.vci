@@ -1,0 +1,66 @@
+file 8861462 1686083498                                         
+version 3
+run General-19-20230606-22:31:38-29012
+attr configname General
+attr datetime 20230606-22:31:38
+attr datetimef 20230606-223138
+attr experiment General
+attr inifile HeavyTrafficLimits_lambda_2.0-switchProb_0.2-serviceTime_uniform(2s,4s).ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network HeavyTrafficLimits
+attr processid 29012
+attr repetition 19
+attr replication rep19
+attr resultdir results/lambda_2.0-switchProb_0.2-serviceTime_uniform(2s,4s)
+attr runnumber 19
+attr seedset 19
+config network HeavyTrafficLimits
+config sim-time-limit 100000s
+config repeat 20
+config replication-label rep19
+config result-dir results/lambda_2.0-switchProb_0.2-serviceTime_uniform(2s,4s)
+config warmup-period 30000s
+config **.source.lambda 2.0
+config **.router.switchProbability 0.2
+config **.server1.serviceTime uniform(2s,4s)
+config **.server2.serviceTime uniform(2s,4s)
+config **.server3.serviceTime uniform(2s,4s)
+config **.server1.crashTime 500
+config **.server2.crashTime 750
+config **.server3.crashTime 1000
+config **.server1.queueLength.record true
+config **.server1.serviceTime.record true
+config **.server2.serviceTime.record true
+config **.server3.serviceTime.record true
+
+vector 0 HeavyTrafficLimits.queue1 queueLength:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr title "queue length"
+vector 1 HeavyTrafficLimits.queue3 queueLength:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr title "queue length"
+vector 2 HeavyTrafficLimits.sink lifeTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr title "lifetime of arrived jobs"
+attr unit s
+vector 3 HeavyTrafficLimits.queue2 queueLength:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr title "queue length"
+0	1875 1143276 208499 301300 30000.174035456843 43435.794308030878 32768 46421 66948 1856619198 1.0634137727378e+14
+0	1145151 1143189 301301 393941 43435.794895924543 56776.480290525965 32768 66947 87560 2531927324 1.9679428897197e+14
+0	2288340 1156288 393943 486455 56776.86745587871 70059.765093158524 32768 87560 108225 3207445242 3.1512157789573e+14
+1	3444628 1108874 208509 558149 30001.983567119863 80431.125725518318 32768 2446 6583 148195276 717315665648
+0	4553502 1175943 486460 579269 70059.92766576409 83459.177094363343 32768 108225 128784 3882901116 4.6126540102421e+14
+0	5729445 1176011 579271 672082 83459.532853957086 96802.748182085284 32768 128784 149394 4557109696 6.3492564496901e+14
+0	6905456 277623 672084 694096 96802.939169757467 99999.241385404959 7736 149395 154218 1174380472 1.7829449685362e+14
+1	7183079 427785 558155 694086 80431.457663191549 99998.610097931108 12642 6580 8113 92933253 685616857125
+2	7610864 1171992 208519 694087 30003.02378574127 99998.610097931108 26223 23239.245804707 82431.243464386 1386178345.3882 80403109183464
+3	8782856 78604 209399 693559 30124.907330912847 99912.481697690059 2544 0 2 1274 1276
+

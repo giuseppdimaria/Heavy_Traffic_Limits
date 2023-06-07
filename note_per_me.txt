@@ -1,0 +1,720 @@
+I parametri che vengono richiesti all'avvio della simulazione sono dei parametri della rete specificati nel file di configurazione NED.
+
+JobNetwork.generator.interArrivalTime: Ã¨ il tempo medio interarrivo dei job generati dal generatore di job. Se non viene specificato alcun valore, il parametro di default Ã¨ 0 secondi, il che significa che i job saranno generati il piÃ¹ velocemente possibile.
+
+JobNetwork.dispatcher.switchProbability: Ã¨ la probabilitÃ  che il dispatcher decida di inviare un job ad un altro server invece di inviarlo al server destinato. Se non viene specificato alcun valore, il parametro di default Ã¨ 0, il che significa che il dispatcher non invierÃ  mai i job ad un server diverso da quello destinato.
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+Quando dichiari una statistica nel file .ned utilizzando l'annotazione @statistic,
+OMNeT++ gestisce automaticamente la registrazione dei dati statistici corrispondenti
+durante l'esecuzione della simulazione. 
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+#
+# OMNeT++/OMNEST Makefile for heavy_traffic-limits
+#
+# This file was generated with the command:
+#  opp_makemake -f --deep -O out -I.
+#
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+generator.out --> server1.in[0];
+server1.out --> dispatcher.in;
+dispatcher.out[0] --> server2.in;
+dispatcher.out[1] --> server3.in;
+dispatcher.out[2] --> server1.in[1];
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+# il valore di 'm1' dalla traccia è mi1 = 3.0, quindi 'S1' espoenziale neativa scrivo:
+# exponential(1/mi1) = exponential(1/3.0) = exponential(0.33s)
+# provare i valori: 3-0, 4.0 per 'mi1'
+**.server1.serviceTime = exponential(0.33s)	   
+**.server2.serviceTime = exponential(0.33s)
+**.server3.serviceTime = exponential(0.33s)
+
+COMMENTO SU QUESTE RIGHE DEL FILE DI CONFIGURAZIONE:
+Ciò è dovuto al fatto che i tempi di servizio di ogni server sono generati in modo indipendente dai processi di simulazione,
+e ogni generazione è influenzata dalla distribuzione casuale di probabilità
+e dalle variabili casuali specifiche per ciascuna generazione.
+
+Quindi, anche se la stessa distribuzione di probabilità viene utilizzata per generare i tempi di servizio di ogni server,
+non c'è garanzia che i tempi di servizio effettivi siano esattamente gli stessi per tutti i server.
+
+Tuttavia, in una simulazione a lungo termine, 
+con un grande numero di generazioni, la media dei tempi di servizio effettivi di ciascun server 
+dovrebbe avvicinarsi alla media della distribuzione di probabilità specificata (cioè 0.33s in questo caso), in linea con la legge dei grandi numeri.
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+BACKUP 'handleMessage()'
+//void Server1::handleMessage(cMessage *msg)
+//{
+//
+//    if (msg->isSelfMessage()){
+//        EV_INFO << "Server2: isSelf\n";
+//
+//        // Se la coda di richieste è vuota, il server non ha nulla da fare, e quindi termina la funzione.
+////        if (queue.isEmpty()) {
+////            EV_INFO << "Queue empty, nothing to do\n";
+////            return;
+////        }
+//
+//        // valore 'serviceTime' (tempo di servizio di un job)
+//        simtime_t serviceTime = par("serviceTime").doubleValue();
+//
+//        // Il job viene inviato al modulo successivo 'JobDispatcher'
+//        EV_INFO << "Server1: Dispatching job " << msg->getName() << " to next server after " << serviceTime << "s\n";
+//        send(msg, "out");
+//
+//        simtime_t responseTime = simTime() - msg->getCreationTime();
+//        emit(responseTimeSignal, responseTime);
+//        emit(queueLengthSignal, queue.getLength());
+//    }
+//    else {
+//        // In caso contrario, ovvero se il messaggio ricevuto non è un messaggio di sé stesso,
+//        // vuol dire che è arrivato un nuovo job da servire.
+//        EV_INFO << "Server1: Received job " << msg->getName() << ", queueing it\n";
+//        // metto questo nuovo job in coda
+//        queue.insert(msg);
+//        // estraggo il primo job in coda e lo servo
+//        processMessage();
+//
+//        emit(r)
+//        // Viene emesso un segnale queueLengthSignal che indica la lunghezza attuale della coda di jobs.
+//        emit(queueLengthSignal, queue.getLength());
+//
+//        // controlla se il puntatore al messaggio in arrivo è nullo
+//        // e la coda dei job in attesa non è vuota.
+//        if (!msg && !queue.isEmpty()) {
+//            // viene creato un nuovo messaggio con il nome "endService"
+//            // e schedulato per essere gestito dal server in un tempo futuro corrispondente alla durata del servizio
+//            msg = new cMessage("endService");
+//            scheduleAt(simTime() + par("serviceTime").doubleValue(), msg);
+//            }
+//        }
+//    }
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+NOMI DEI PARAMETRI (FILE .NED) PER LE MISURE DI PRESTAZIONI RICHIESTE NELLA TRACCIA:
+(v.d. Sink.ned, Sink.h e Sink.cc)
+
+Ecco i nomi dei parametri per le misure di prestazione richieste nella traccia:
+
+1. Tempo medio di permanenza nel sistema (meanQueueingTime): 
+    - Nome del segnale: meanQueueingTimeSignal
+    - Parametro restituito: valore medio del tempo di permanenza nel sistema per ogni job che lascia il sistema
+
+2. Lunghezza media della coda (meanQueueLength):
+    - Nome del segnale: meanQueueLengthSignal
+    - Parametro restituito: valore medio della lunghezza della coda nel sistema
+
+3. Tempo medio di servizio (meanServiceTime):
+    - Nome del segnale: meanServiceTimeSignal
+    - Parametro restituito: valore medio del tempo di servizio per ogni job che lascia il sistema
+
+4. Percentuale di job con ritardo (delayProbability):
+    - Nome del segnale: delayProbabilitySignal
+    - Parametro restituito: la percentuale di job che hanno subito un ritardo nel sistema
+
+5. Tempo medio di ritardo (meanDelayTime):
+    - Nome del segnale: meanDelayTimeSignal
+    - Parametro restituito: valore medio del tempo di ritardo subito dai job che lasciano il sistema
+
+6. Numero medio di job nella coda (meanNumberOfJobsInQueue):
+    - Nome del segnale: meanNumberOfJobsInQueueSignal
+    - Parametro restituito: valore medio del numero di job presenti nella coda nel sistema
+
+7. Utilizzazione del server (serverUtilization):
+    - Nome del segnale: serverUtilizationSignal
+    - Parametro restituito: la percentuale di tempo in cui il server è stato occupato nell'intero periodo di simulazione.
+
+8. Numero medio di job nel sistema (meanNumberOfJobsInSystem):
+    - Nome del segnale: meanNumberOfJobsInSystemSignal
+    - Parametro restituito: valore medio del numero di job presenti nel sistema (coda + server) nel sistema.
+
+9. Velocità di arrivo dei job (arrivalRate):
+    - Nome del segnale: arrivalRateSignal
+    - Parametro restituito: la velocità media di arrivo dei job nel sistema.
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+SCA, CVI & VEC
+
+- Il file .sca contiene i risultati della simulazione in formato tabellare 
+- Il file .vci contiene i dati della simulazione in formato binario, ed è utilizzato per la visualizzazione dei risultati attraverso la GUI di OMNeT++.
+- Il file .vec contiene i dati di traccia degli eventi (event trace) della simulazione
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+scheduleAt(simTime() + exponential(1/lambda), generateJobMsg);
+
+
+Questa riga pianifica la generazione del prossimo job con un ritardo pari al tempo di interarrivo esponenziale tra i job, calcolato come 1/lambda. Il modulo continuerà a generare job indefinitamente, poiché questo codice viene eseguito ogni volta che viene gestito il messaggio generateJobMsg. In altre parole, ogni volta che viene generato un job, viene pianificato il successivo con un ritardo pari al tempo di interarrivo esponenziale tra i job.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+opp_scavetool
+
+è uno strumento di linea di comando fornito dal framework OMNeT++ che consente di esplorare e analizzare i dati raccolti da una simulazione
+
+Il mio comando: opp_scavetool x samples/heavy_traffic-limits/results/lambda_1.0-switchProb_0.2-s1ExpMean_mu1_3/General-\#19.sca -F JSON -o -,  opp_scavetool viene utilizzato per aprire e visualizzare un file di dati SCAV come JSON. In particolare, la sintassi del comando è la seguente:
+
+opp_scavetool x [file di input] -F JSON -o -
+
+esempio:
+opp_scavetool x samples/heavy_traffic-limits/results/lambda_1.0-switchProb_0.2-s1ExpMean_mu1_3/General-\#19.sca -F JSON -o -
+opp_scavetool x samples/heavy_traffic-limits/results/lambda_1.0-switchProb_0.2-s1ExpMean_mu1_3/General-\#19.sca -F CSV-R -o -
+opp_scavetool x samples/heavy_traffic-limits/results/lambda_1.0-switchProb_0.2-s1ExpMean_mu1_3/General-#\0.sca -o General-#\0.csv -F CSV-R   (salva file .csv)
+
+Dove:
+
+x indica che si vuole esplorare il contenuto del file di input.
+[file di input] è il percorso del file di input, nel tuo caso samples/heavy_traffic-limits/results/lambda_1.0-switchProb_0.2-s1ExpMean_mu1_3/General-#19.sca.
+-F JSON specifica il formato di output, che in questo caso è JSON.
+-o - indica che l'output deve essere inviato alla console.
+
+
+L'output, esso contiene molte informazioni sulla simulazione che è stata eseguita e sui dati raccolti. Ad esempio, nella sezione scalar è possibile vedere i valori di alcune grandezze misurate durante la simulazione, come la lunghezza media della coda e il tempo medio di attesa dei job.
+Nella sezione histogram è possibile vedere l'istogramma dei tempi di attesa dei job, suddivisi in classi di uguale intervallo.
+
+In generale, l'output di opp_scavetool può essere molto dettagliato e offre molte informazioni utili per l'analisi delle prestazioni della simulazione.
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# Funzione per eseguire il comando ScaveTool e esportare i dati in CSV
+    def export_to_csv(input_file):
+        output_file = f"{input_file}.csv"
+        command = f"scavetool x {input_file} -o {output_file} -f csv"
+        subprocess.run(command, shell=True)
+    
+    # Funzione ricorsiva per eseguire il comando ScaveTool su tutti i file .sca nella cartella e nelle sottocartelle
+    def process_files(folder):
+        for root, dirs, files in os.walk(folder):
+            for file in files:
+                if file.endswith(".sca"):
+                    input_file = os.path.join(root, file)
+                    export_to_csv(input_file)
+
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+---------------------------------------------------------------------------------------------------------------------------------------
+
+record=vector?, histogram specifica il tipo di registrazione delle statistiche.
+
+record=vector? indica che vuoi registrare un vettore di valori per la statistica responseTime.
+Il punto interrogativo dopo vector indica che la registrazione della statistica è facoltativa,
+ovvero i valori potrebbero non essere registrati in ogni esecuzione della simulazione.
+
+histogram indica che desideri creare un istogramma per la statistica responseTime.
+Un istogramma fornisce una visualizzazione dei dati raccolti, tramite la suddivisione dei valori in intervalli (bin)
+e conteggiando il numero di valori in ciascun intervallo.
+Questo può essere utile per comprendere la distribuzione dei tempi di risposta nel sistema.
+
+In sintesi, con questa configurazione, la statistica responseTime nel modulo Server1 registrerà un vettore di valori (opzionalmente),
+e genererà un istogramma basato su tali valori. Ciò consentirà di analizzare i tempi di risposta nel sistema e visualizzarli in forma di istogramma.
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+BACKUP CODE (export_result.py)
+
+import subprocess
+import os
+
+# Percorso della cartella dei risultati
+results_folder = "results"
+
+# Funzione per eseguire il comando ScaveTool e esportare i dati in CSV
+def export_to_csv(input_file):
+    output_file = f"{input_file}.csv"
+    command = f"opp_scavetool x {input_file} -o {output_file} -F CSV-R"
+    subprocess.run(command, shell=True)
+
+# Funzione ricorsiva per eseguire il comando ScaveTool su tutti i file .sca nella cartella e nelle sottocartelle
+def process_files(folder):
+    for root, dirs, files in os.walk(folder):
+        for file in files:
+            if file.endswith(".sca"):
+                input_file = os.path.join(root, file)
+                export_to_csv(input_file)
+                
+# Esegui il comando ScaveTool su tutti i file .sca nella cartella dei risultati e nelle sottocartelle
+process_files(results_folder)
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Per esplorare altre metriche e avere una visione più completa del comportamento del sistema,
+puoi utilizzare i dati di output della simulazionee calcolare le seguenti misure di prestazione:
+
+1- Distribuzione dei tempi di attesa dei job in coda:
+Puoi calcolare la distribuzione dei tempi di attesa dei job in coda e vedere se ci sono code che si formano e se il tempo di attesa medio dei job supera una certa soglia.
+Puoi utilizzare le statistiche di output della coda come il numero medio di job in coda, il tempo medio di attesa in coda,
+la deviazione standard del tempo di attesa in coda, ecc.
+
+2- Distribuzione dei tempi di completamento dei job: Puoi calcolare la distribuzione dei tempi di completamento dei job
+e vedere se ci sono job che richiedono tempi di completamento molto elevati.
+Puoi utilizzare le statistiche di output del sistema come il tempo medio di permanenza nel sistema, il tempo massimo (minimo) di permanenza nel sistema,
+la deviazione standard del tempo di permanenza nel sistema, ecc
+
+
+Per le misure di prestazione richieste dalla traccia, puoi calcolare le seguenti metriche:
+
+1- Mediana della distribuzione del tempo di risposta del sistema: La mediana del tempo di risposta del sistema può essere calcolata come il tempo in cui
+il 50% dei job completati lascia il sistema. Questa misura fornisce un'indicazione della velocità con cui il sistema riesce a completare i job.
+Puoi calcolare anche un intervallo di confidenza per la mediana per valutare la precisione della stima.
+
+2- Mediana della distribuzione del tempo di risposta di ogni singolo servente:
+La mediana del tempo di risposta di ogni singolo servente può essere calcolata come il tempo in cui il 50% dei job completati lascia il servente specifico.
+Questa misura fornisce un'indicazione della velocità con cui ogni servente riesce a completare i job.
+Puoi calcolare anche un intervallo di confidenza per la mediana per valutare la precisione della stima.
+
+3- Tempo medio di permanenza nel sistema dei job: Il tempo medio di permanenza nel sistema dei job può essere calcolato come
+il tempo medio trascorso dai job nel sistema.
+Questa misura fornisce un'indicazione della durata media del ciclo di vita dei job nel sistema.
+Puoi calcolare anche un intervallo di confidenza per il tempo medio per valutare la precisione della stima.
+
+4- Tempo massimo (minimo) di permanenza nel sistema dei job: Il tempo massimo (minimo) di permanenza nel sistema dei job può essere calcolato
+come il tempo massimo (minimo) trascorso dai job nel sistema.
+Questa misura fornisce un'indicazione del tempo massimo (minimo) necessario per completare i job nel sistema
+
+5- Fattore di utilizzo dei singoli server: Il fattore di utilizzo dei singoli server può essere calcolato
+come il rapporto tra il tempo di utilizzo del server e il tempo totale di simulazione.
+Questa misura fornisce un'indicazione del grado di utilizzo dei server.
+Puoi calcolare anche un intervallo di confidenza per il fattore di utilizzo per valutare la
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+BACKUP CODE (Server1.ned)
+
+/*
+ * Server\.cc
+ *
+ *  Created on: 22 apr 2023
+ *      Author: giuse
+ */
+
+
+
+#include <omnetpp.h>
+
+using namespace omnetpp;
+
+
+namespace queueing {
+
+class Server1 : public cSimpleModule
+{
+  private:
+    cMessage *msg = nullptr;
+    cMessage *currentMessage = nullptr;
+
+    cQueue queue;
+    simsignal_t queueLengthSignal;
+    simsignal_t responseTimeSignal;
+
+  public:
+    Server1();
+    virtual ~Server1();
+
+  protected:
+    virtual void initialize() override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual void processMessage();
+
+};
+
+
+
+Define_Module(Server1);
+
+Server1::Server1()
+{
+    msg = nullptr;
+}
+
+Server1::~Server1()
+{
+    delete msg;
+}
+
+void Server2::initialize()
+{
+    queueLengthSignal = registerSignal("queueLength");
+    responseTimeSignal = registerSignal("responseTime");
+
+
+}
+
+
+void Server2::handleMessage(cMessage *msg)
+{
+
+    if (msg->isSelfMessage()){
+        EV_INFO << "Server1: isSelf\n";
+
+        //  valore 'serviceTime' (tempo di servizio di un job)
+        simtime_t serviceTime = par("serviceTime").doubleValue();
+
+        // Il job viene inviato al modulo successivo 'Sink'
+        EV_INFO << "Server1: Dispatching job " << msg->getName() << " to next server after " << serviceTime << "s\n";
+        send(msg, "out");
+
+        simtime_t responseTime = simTime() - msg->getCreationTime();
+        emit(responseTimeSignal, responseTime);
+        emit(queueLengthSignal, queue.getLength());
+    }
+    else {
+        // In caso contrario, ovvero se il messaggio ricevuto non è un messaggio di sé stesso,
+        // vuol dire che è arrivato un nuovo job da servire.
+        EV_INFO << "Server2: Received job " << msg->getName() << ", queueing it\n";
+        queue.insert(msg);
+        processMessage();
+
+        // Viene emesso un segnale queueLengthSignal che indica la lunghezza attuale della coda di jobs.
+        emit(queueLengthSignal, queue.getLength());
+
+        // controlla se il puntatore al messaggio in arrivo è nullo
+        // e la coda dei job in attesa non è vuota.
+        if (!msg && !queue.isEmpty()) {
+            // viene creato un nuovo messaggio con il nome "endService"
+            // e schedulato per essere gestito dal server in un tempo futuro corrispondente alla durata del servizio
+            msg = new cMessage("endService");
+            scheduleAt(simTime() + par("serviceTime").doubleValue(), msg);
+            }
+        }
+    }
+
+
+
+    void Server2::processMessage()
+    {
+
+        if (queue.isEmpty())
+        {
+            EV << "Server2: Message queue is empty\n";
+            return; // esco dalla funzione se la coda è vuota
+        }
+
+        currentMessage = (cMessage*) queue.pop(); // estraggo il prossimo messaggio dalla coda
+        EV << "Server1: Processing message: " << currentMessage->getName() << "\n";
+
+        // eseguo la pianificazione del prossimo messaggio
+        scheduleAt(simTime() + par("serviceTime").doubleValue(), currentMessage);
+    }
+
+
+
+}
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+BACKUP CODE (JobNetwork.ned)
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+//
+
+//
+// Il JobDispatcher ha come input i gate dei tre serventi e come output un solo gate,
+// che smista i job ai serventi in base alla probabilità specificata.
+// Ogni servente ha una propria coda che viene gestita dal modulo del servente stesso. 
+// Ad esempio, Server1 ha un input e un output gate, e gestisce la coda associata al proprio input gate. 
+// Quando un job arriva al modulo Server1, se la sua coda è vuota, viene processato immediatamente, altrimenti viene aggiunto alla coda.
+// Quando il job in testa alla coda viene processato e lascia il modulo attraverso l'output gate, il successivo job in coda diventa il primo e viene processato a sua volta.
+//
+package org.omnetpp.queueing;
+
+// Dichiarazione del network che collega tutti i moduli
+network JobNetwork
+{
+    submodules:
+        generator: PoissonJobGenerator {
+            @display("p=50,50");
+        }
+        server1: Server {
+            @display("p=200,50");
+            @statistic[queueLength](title="Queue length"; source="queueLength"; record=vector; interpolationmode=none);
+            @statistic[responseTime](title="Response time"; description="Overall response time"; record=vector; interpolationmode=none);
+        }
+        server2: Server {
+            @display("p=200,150");
+        }
+        server3: Server {
+            @display("p=200,250");
+        }
+        dispatcher: JobDispatcher {
+            @display("p=357,150");
+        }
+
+        queue1: PassiveQueue {
+            @display("p=295,50");
+        }
+
+        queue2: PassiveQueue {
+            @display("p=146,120");
+        }
+
+        queue3: PassiveQueue {
+            @display("p=140,273");
+        }
+
+        sink: Sink {
+            @display("p=50,189");
+        }
+    connections allowunconnected:
+        generator.out --> queue1.in++;
+        queue1.out++ --> server1.in++;
+        server1.out --> dispatcher.in;
+        dispatcher.out[0] --> queue2.in++;
+        dispatcher.out[1] --> queue3.in++;
+        queue2.out++ --> server2.in++;
+        queue3.out++ --> server3.in++;
+        server2.out --> sink.in[0];
+        server3.out --> sink.in[1];
+        //dispatcher.out[2] --> server1.in[1];
+        //dispatcher.out[3] --> generator.stopIn;      
+    	  
+}
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+BACKUP SINK CODE
+
+Sink.ned
+//
+
+//
+// Il modulo Sink, all'interno di un sistema di un progetto OMNeT++, viene utilizzato per raccogliere i pacchetti che lasciano il sistema
+// e calcolare le misure di prestazione desiderate.
+// In generale, il modulo Sink agisce come un terminale finale che distrugge i pacchetti in uscita e calcola le statistiche di interesse.
+// 
+package org.omnetpp.queueing;
+
+simple Sink
+{
+    parameters:
+        @display("i=block/sink");
+        bool keepJobs = default(false); // whether to keep the received jobs till the end of simulation
+        
+        // Signal and statistic for overall response time of jobs in the system
+        @signal[responseTime](type="simtime_t");
+        @statistic[responseTime](title="Overall Response Time"; source="responseTime"; record=vector,mean,max,min; interpolationmode=none;);
+        
+        // Signal and statistic for average time in system of jobs
+        @signal[timeInSystem](type="simtime_t");
+        @statistic[timeInSystem](title="Average Time in System"; source="timeInSystem"; record=vector,mean,max,min; interpolationmode=none;);
+        
+        // Signal and statistic for queue length
+        @signal[queueLength](title="Queue Length"; source="queueLength"; record=vector; interpolationmode=none);
+        @statistic[queueLength](title="Queue Length"; source="queueLength"; record=vector,mean,max,min; interpolationmode=none);
+        
+        // Signal and statistic for server response time
+        @signal[serverResponseTime](title="Server Response Time"; source="serverResponseTime"; record=vector; interpolationmode=none);
+        @statistic[serverResponseTime](title="Server Response Time"; source="serverResponseTime"; record=vector,mean,max,min; interpolationmode=none;);
+        
+        // Signal and statistic for job life time
+        @signal[lifeTime](type="simtime_t");
+        @statistic[lifeTime](title="Life Time of Arrived Jobs"; source="lifeTime"; record=vector,mean,max,min; interpolationmode=none;);
+       
+    gates:
+        input in[2];
+}
+
+
+Sink.h
+/*
+ * Sink.h
+ *
+ *  Created on: 2 mag 2023
+ *      Author: giuse
+ */
+
+
+
+//
+// This file is part of an OMNeT++/OMNEST simulation example.
+//
+// Copyright (C) 2006-2015 OpenSim Ltd.
+//
+// This file is distributed WITHOUT ANY WARRANTY. See the file
+// `license' for details on this and other legal matters.
+//
+
+
+#ifndef __QUEUEING_SINK_H
+#define __QUEUEING_SINK_H
+
+#include "QueueingDefs.h"
+
+namespace queueing {
+
+/**
+ * Consumes jobs; see NED file for more info.
+ */
+class QUEUEING_API Sink : public cSimpleModule
+{
+  private:
+    simsignal_t lifeTimeSignal;
+    // Mediana della distribuzione del tempo di risposta del sistema
+//    simsignal_t responseTimeSignal;
+
+//    simsignal_t serviceTimeSignal;
+    // Tempo medio di permanenza del job nel sistema
+    simsignal_t timeInSystemSignal;
+    // Tempo massimo/minimo di permanenza del job nel sistema
+    simsignal_t maxTimeInSystemSignal;
+    simsignal_t minTimeInSystemSignal;
+    bool keepJobs;
+
+  protected:
+    virtual void initialize() override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual void finish() override;
+};
+
+}; //namespace
+
+#endif
+
+
+
+
+
+
+Sink.cc
+/*
+ * Sink.cc
+ *
+ *  Created on: 1 mag 2023
+ *      Author: giuse
+ */
+
+
+
+#include "Sink.h"
+#include "Job.h"
+
+namespace queueing {
+
+Define_Module(Sink);
+
+void Sink::initialize()
+{
+    lifeTimeSignal = registerSignal("lifeTime");    // tempo di vita complessivo dei job
+    timeInSystemSignal = registerSignal("timeInSystem");
+    maxTimeInSystemSignal = registerSignal("maxTimeInSystem");
+    minTimeInSystemSignal = registerSignal("minTimeInSystem");
+    keepJobs = par("keepJobs");
+}
+
+/*
+ * calcolo i tempi di vita dei hob utilizzando la differenza tra:
+ * l'istante di tempo corrente (simTime()) e il tempo di creazione del job 'job->getTotalQueueingTime()'
+ *
+ * Emetto i segnali lifeTimeSignal, lifeTimeSignalU1 e lifeTimeSignalU2,
+ * con il valore corretto per ciascun tipo di joblifeTimeSignal
+ */
+void Sink::handleMessage(cMessage *msg)
+{
+    queueing::Job *job = check_and_cast<Job *>(msg);
+
+    //get stats
+    emit(lifeTimeSignal, simTime() - job->getCreationTime());
+
+    // Calcolo il tempo di permanenza del job nel sistema
+    simtime_t timeInSystem = simTime() - msg->getCreationTime();
+    simtime_t maxTimeInSystem;
+    simtime_t minTimeInSystem;
+
+    emit(timeInSystemSignal, timeInSystem);
+
+    // Aggiorno il tempo massimo e minimo di permanenza dei job nel sistema
+    if (timeInSystem > maxTimeInSystem) {
+        maxTimeInSystem = timeInSystem;
+        emit(maxTimeInSystemSignal, maxTimeInSystem);
+    }
+    if (timeInSystem < minTimeInSystem) {
+        minTimeInSystem = timeInSystem;
+        emit(minTimeInSystemSignal, minTimeInSystem);
+    }
+
+
+    if (!keepJobs)
+        delete msg;
+}
+
+void Sink::finish()
+{
+
+}
+
+}; //namespace
+

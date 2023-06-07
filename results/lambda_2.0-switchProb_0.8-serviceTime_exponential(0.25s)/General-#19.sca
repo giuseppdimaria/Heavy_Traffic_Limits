@@ -1,0 +1,433 @@
+version 3
+run General-19-20230606-23:49:54-19064
+attr configname General
+attr datetime 20230606-23:49:54
+attr datetimef 20230606-234954
+attr experiment General
+attr inifile HeavyTrafficLimits_lambda_2.0-switchProb_0.8-serviceTime_exponential(0.25s).ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network HeavyTrafficLimits
+attr processid 19064
+attr repetition 19
+attr replication rep19
+attr resultdir results/lambda_2.0-switchProb_0.8-serviceTime_exponential(0.25s)
+attr runnumber 19
+attr seedset 19
+config network HeavyTrafficLimits
+config sim-time-limit 100000s
+config repeat 20
+config replication-label rep19
+config result-dir results/lambda_2.0-switchProb_0.8-serviceTime_exponential(0.25s)
+config warmup-period 30000s
+config **.source.lambda 2.0
+config **.router.switchProbability 0.8
+config **.server1.serviceTime exponential(0.25s)
+config **.server2.serviceTime exponential(0.25s)
+config **.server3.serviceTime exponential(0.25s)
+config **.server1.crashTime 500
+config **.server2.crashTime 750
+config **.server3.crashTime 1000
+config **.server1.queueLength.record true
+config **.server1.serviceTime.record true
+config **.server2.serviceTime.record true
+config **.server3.serviceTime.record true
+
+par HeavyTrafficLimits.source typename "\"org.omnetpp.queueing.Source\""
+par HeavyTrafficLimits.source numJobs -1
+par HeavyTrafficLimits.source lambda 2
+par HeavyTrafficLimits.source jobName "\"job\""
+par HeavyTrafficLimits.source startTime 2
+par HeavyTrafficLimits.source stopTime -1s
+attr unit s
+scalar HeavyTrafficLimits.source created:last 200496
+attr interpolationmode none
+attr recordingmode last
+attr title "il numero di job creati, last"
+par HeavyTrafficLimits.queue1 typename "\"org.omnetpp.queueing.PassiveQueue\""
+par HeavyTrafficLimits.queue1 capacity -1
+par HeavyTrafficLimits.queue1 fifo true
+par HeavyTrafficLimits.queue1 sendingAlgorithm "\"priority\""
+attr enum priority,random,roundRobin,minDelay
+scalar HeavyTrafficLimits.queue1 queueingTime:mean 0.013343485084462
+attr interpolationmode none
+attr recordingmode mean
+attr title "queueing time at dequeue, mean"
+attr unit s
+scalar HeavyTrafficLimits.queue1 queueingTime:max 0.06034728385
+attr interpolationmode none
+attr recordingmode max
+attr title "queueing time at dequeue, max"
+attr unit s
+statistic HeavyTrafficLimits.queue1 queueingTime:histogram
+field count 7306
+field mean 0.013343485084462
+field stddev 0.0081232564029627
+field min 4.887499e-06
+field max 0.06034728385
+field sum 97.48750202708
+field sqrsum 1.7828602161872
+attr interpolationmode none
+attr recordingmode histogram
+attr title "queueing time at dequeue"
+attr unit s
+bin	-inf	0
+bin	0	274
+bin	0.001	294
+bin	0.002	243
+bin	0.003	279
+bin	0.004	284
+bin	0.005	277
+bin	0.006	284
+bin	0.007	283
+bin	0.008	269
+bin	0.009	282
+bin	0.01	294
+bin	0.011	282
+bin	0.012	285
+bin	0.013	284
+bin	0.014	283
+bin	0.015	308
+bin	0.016	264
+bin	0.017	261
+bin	0.018	264
+bin	0.019	297
+bin	0.02	254
+bin	0.021	269
+bin	0.022	287
+bin	0.023	263
+bin	0.024	292
+bin	0.025	173
+bin	0.026	9
+bin	0.027	10
+bin	0.028	15
+bin	0.029	13
+bin	0.03	17
+bin	0.031	12
+bin	0.032	12
+bin	0.033	8
+bin	0.034	5
+bin	0.035	6
+bin	0.036	6
+bin	0.037	6
+bin	0.038	10
+bin	0.039	12
+bin	0.04	2
+bin	0.041	3
+bin	0.042	3
+bin	0.043	4
+bin	0.044	6
+bin	0.045	5
+bin	0.046	1
+bin	0.047	6
+bin	0.048	2
+bin	0.049	1
+bin	0.05	0
+bin	0.051	0
+bin	0.052	0
+bin	0.053	0
+bin	0.054	0
+bin	0.055	0
+bin	0.056	0
+bin	0.057	1
+bin	0.058	0
+bin	0.059	1
+bin	0.06	1
+bin	0.061	0
+scalar HeavyTrafficLimits.queue1 queueLength:timeavg 0.0013928507981727
+attr interpolationmode sample-hold
+attr recordingmode timeavg
+attr title "queue length, timeavg"
+scalar HeavyTrafficLimits.queue1 queueLength:max 3
+attr interpolationmode sample-hold
+attr recordingmode max
+attr title "queue length, max"
+scalar HeavyTrafficLimits.queue1 dropped:count 0
+attr interpolationmode none
+attr recordingmode count
+attr title "drop event, count"
+par HeavyTrafficLimits.server1 typename "\"org.omnetpp.queueing.Server\""
+par HeavyTrafficLimits.server1 fetchingAlgorithm "\"priority\""
+attr enum priority,random,roundRobin,longestQueue,exhaustiveService
+par HeavyTrafficLimits.server1 serviceTime 0.025656s
+attr unit s
+par HeavyTrafficLimits.server1 checkJobDeadline false
+scalar HeavyTrafficLimits.server1 responseTime:mean 0.025655956313032
+attr "" ""
+attr interpolationmode none
+attr recordingmode mean
+attr title "Response time, mean"
+scalar HeavyTrafficLimits.server1 responseTime:max 0.025655956313
+attr "" ""
+attr interpolationmode none
+attr recordingmode max
+attr title "Response time, max"
+scalar HeavyTrafficLimits.server1 droppedForDeadline:count 0
+attr interpolationmode none
+attr recordingmode count
+attr title "drop event for deadline reached, count"
+scalar HeavyTrafficLimits.server1 busy:timeavg 0.051570438273064
+attr interpolationmode sample-hold
+attr recordingmode timeavg
+attr title "server busy state, timeavg"
+par HeavyTrafficLimits.queue2 typename "\"org.omnetpp.queueing.PassiveQueue\""
+par HeavyTrafficLimits.queue2 capacity -1
+par HeavyTrafficLimits.queue2 fifo true
+par HeavyTrafficLimits.queue2 sendingAlgorithm "\"priority\""
+attr enum priority,random,roundRobin,minDelay
+scalar HeavyTrafficLimits.queue2 queueingTime:mean 0.088288433901854
+attr interpolationmode none
+attr recordingmode mean
+attr title "queueing time at dequeue, mean"
+attr unit s
+scalar HeavyTrafficLimits.queue2 queueingTime:max 0.587932959898
+attr interpolationmode none
+attr recordingmode max
+attr title "queueing time at dequeue, max"
+attr unit s
+statistic HeavyTrafficLimits.queue2 queueingTime:histogram
+field count 25684
+field mean 0.088288433901854
+field stddev 0.060158291552309
+field min 1.1376745e-05
+field max 0.587932959898
+field sum 2267.6001363352
+field sqrsum 293.150156504
+attr interpolationmode none
+attr recordingmode histogram
+attr title "queueing time at dequeue"
+attr unit s
+bin	-inf	0
+bin	0	1412
+bin	0.01	1445
+bin	0.02	1499
+bin	0.03	1460
+bin	0.04	1530
+bin	0.05	1591
+bin	0.06	1564
+bin	0.07	1540
+bin	0.08	1670
+bin	0.09	1559
+bin	0.1	1777
+bin	0.11	4534
+bin	0.12	400
+bin	0.13	360
+bin	0.14	374
+bin	0.15	331
+bin	0.16	335
+bin	0.17	293
+bin	0.18	283
+bin	0.19	234
+bin	0.2	258
+bin	0.21	204
+bin	0.22	185
+bin	0.23	280
+bin	0.24	78
+bin	0.25	78
+bin	0.26	67
+bin	0.27	50
+bin	0.28	45
+bin	0.29	45
+bin	0.3	25
+bin	0.31	28
+bin	0.32	24
+bin	0.33	22
+bin	0.34	30
+bin	0.35	15
+bin	0.36	12
+bin	0.37	2
+bin	0.38	10
+bin	0.39	7
+bin	0.4	6
+bin	0.41	6
+bin	0.42	5
+bin	0.43	2
+bin	0.44	1
+bin	0.45	0
+bin	0.46	2
+bin	0.47	1
+bin	0.48	0
+bin	0.49	1
+bin	0.5	1
+bin	0.51	0
+bin	0.52	0
+bin	0.53	2
+bin	0.54	0
+bin	0.55	0
+bin	0.56	0
+bin	0.57	0
+bin	0.58	1
+bin	0.59	0
+scalar HeavyTrafficLimits.queue2 queueLength:timeavg 0.03239685710726
+attr interpolationmode sample-hold
+attr recordingmode timeavg
+attr title "queue length, timeavg"
+scalar HeavyTrafficLimits.queue2 queueLength:max 5
+attr interpolationmode sample-hold
+attr recordingmode max
+attr title "queue length, max"
+scalar HeavyTrafficLimits.queue2 dropped:count 0
+attr interpolationmode none
+attr recordingmode count
+attr title "drop event, count"
+par HeavyTrafficLimits.server2 typename "\"org.omnetpp.queueing.Server\""
+par HeavyTrafficLimits.server2 fetchingAlgorithm "\"priority\""
+attr enum priority,random,roundRobin,longestQueue,exhaustiveService
+par HeavyTrafficLimits.server2 serviceTime 0.140735s
+attr unit s
+par HeavyTrafficLimits.server2 checkJobDeadline false
+scalar HeavyTrafficLimits.server2 responseTime:mean 0.14073517676113
+attr "" ""
+attr interpolationmode none
+attr recordingmode mean
+attr title "Response time, mean"
+scalar HeavyTrafficLimits.server2 responseTime:max 0.140735176761
+attr "" ""
+attr interpolationmode none
+attr recordingmode max
+attr title "Response time, max"
+scalar HeavyTrafficLimits.server2 droppedForDeadline:count 0
+attr interpolationmode none
+attr recordingmode count
+attr title "drop event for deadline reached, count"
+scalar HeavyTrafficLimits.server2 busy:timeavg 0.22623387125749
+attr interpolationmode sample-hold
+attr recordingmode timeavg
+attr title "server busy state, timeavg"
+par HeavyTrafficLimits.queue3 typename "\"org.omnetpp.queueing.PassiveQueue\""
+par HeavyTrafficLimits.queue3 capacity -1
+par HeavyTrafficLimits.queue3 fifo true
+par HeavyTrafficLimits.queue3 sendingAlgorithm "\"priority\""
+attr enum priority,random,roundRobin,minDelay
+scalar HeavyTrafficLimits.queue3 queueingTime:mean 0.20718167131512
+attr interpolationmode none
+attr recordingmode mean
+attr title "queueing time at dequeue, mean"
+attr unit s
+scalar HeavyTrafficLimits.queue3 queueingTime:max 0.975146111411
+attr interpolationmode none
+attr recordingmode max
+attr title "queueing time at dequeue, max"
+attr unit s
+statistic HeavyTrafficLimits.queue3 queueingTime:histogram
+field count 4111
+field mean 0.20718167131512
+field stddev 0.13354434122631
+field min 0.000120161939
+field max 0.975146111411
+field sum 851.72385077648
+field sqrsum 249.7596852152
+attr interpolationmode none
+attr recordingmode histogram
+attr title "queueing time at dequeue"
+attr unit s
+bin	-inf	0
+bin	0	188
+bin	0.02	210
+bin	0.04	206
+bin	0.06	206
+bin	0.08	206
+bin	0.1	230
+bin	0.12	213
+bin	0.14	190
+bin	0.16	191
+bin	0.18	197
+bin	0.2	229
+bin	0.22	203
+bin	0.24	233
+bin	0.26	200
+bin	0.28	211
+bin	0.3	224
+bin	0.32	420
+bin	0.34	22
+bin	0.36	29
+bin	0.38	31
+bin	0.4	25
+bin	0.42	31
+bin	0.44	25
+bin	0.46	24
+bin	0.48	19
+bin	0.5	27
+bin	0.52	16
+bin	0.54	18
+bin	0.56	24
+bin	0.58	14
+bin	0.6	9
+bin	0.62	14
+bin	0.64	10
+bin	0.66	4
+bin	0.68	2
+bin	0.7	2
+bin	0.72	1
+bin	0.74	1
+bin	0.76	2
+bin	0.78	1
+bin	0.8	1
+bin	0.82	0
+bin	0.84	0
+bin	0.86	0
+bin	0.88	0
+bin	0.9	0
+bin	0.92	1
+bin	0.94	0
+bin	0.96	1
+bin	0.98	0
+scalar HeavyTrafficLimits.queue3 queueLength:timeavg 0.012168234259917
+attr interpolationmode sample-hold
+attr recordingmode timeavg
+attr title "queue length, timeavg"
+scalar HeavyTrafficLimits.queue3 queueLength:max 3
+attr interpolationmode sample-hold
+attr recordingmode max
+attr title "queue length, max"
+scalar HeavyTrafficLimits.queue3 dropped:count 0
+attr interpolationmode none
+attr recordingmode count
+attr title "drop event, count"
+par HeavyTrafficLimits.server3 typename "\"org.omnetpp.queueing.Server\""
+par HeavyTrafficLimits.server3 fetchingAlgorithm "\"priority\""
+attr enum priority,random,roundRobin,longestQueue,exhaustiveService
+par HeavyTrafficLimits.server3 serviceTime 0.358084s
+attr unit s
+par HeavyTrafficLimits.server3 checkJobDeadline false
+scalar HeavyTrafficLimits.server3 responseTime:mean 0.35808428012993
+attr "" ""
+attr interpolationmode none
+attr recordingmode mean
+attr title "Response time, mean"
+scalar HeavyTrafficLimits.server3 responseTime:max 0.35808428013
+attr "" ""
+attr interpolationmode none
+attr recordingmode max
+attr title "Response time, max"
+scalar HeavyTrafficLimits.server3 droppedForDeadline:count 0
+attr interpolationmode none
+attr recordingmode count
+attr title "drop event for deadline reached, count"
+scalar HeavyTrafficLimits.server3 busy:timeavg 0.14414719382219
+attr interpolationmode sample-hold
+attr recordingmode timeavg
+attr title "server busy state, timeavg"
+par HeavyTrafficLimits.router typename "\"org.omnetpp.queueing.Router\""
+par HeavyTrafficLimits.router switchProbability 0.8
+par HeavyTrafficLimits.sink typename "\"org.omnetpp.queueing.Sink\""
+par HeavyTrafficLimits.sink keepJobs false
+scalar HeavyTrafficLimits.sink lifeTime:mean 0.23278020612631
+attr interpolationmode none
+attr recordingmode mean
+attr title "lifetime of arrived jobs, mean"
+attr unit s
+scalar HeavyTrafficLimits.sink lifeTime:max 1.369394927872
+attr interpolationmode none
+attr recordingmode max
+attr title "lifetime of arrived jobs, max"
+attr unit s
+scalar HeavyTrafficLimits.sink lifeTime:min 0.166391133074
+attr interpolationmode none
+attr recordingmode min
+attr title "lifetime of arrived jobs, min"
+attr unit s
+par HeavyTrafficLimits typename "\"org.omnetpp.queueing.HeavyTrafficLimits\""
+
