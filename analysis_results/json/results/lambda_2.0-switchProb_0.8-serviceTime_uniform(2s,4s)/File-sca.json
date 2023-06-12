@@ -1,0 +1,79 @@
+{
+    "General-9-20230611-23:56:41-43760" : {
+        "attributes" : {
+            "configname" : "General",
+            "datetime" : "20230611-23:56:41",
+            "datetimef" : "20230611-235641",
+            "experiment" : "General",
+            "inifile" : "HeavyTrafficLimits_lambda_2.0-switchProb_0.8-serviceTime_uniform(2s,4s).ini",
+            "iterationvars" : "",
+            "iterationvarsd" : "",
+            "iterationvarsf" : "",
+            "measurement" : "",
+            "network" : "HeavyTrafficLimits",
+            "processid" : "43760",
+            "repetition" : "9",
+            "replication" : "rep9",
+            "resultdir" : "results/lambda_2.0-switchProb_0.8-serviceTime_uniform(2s,4s)",
+            "runnumber" : "9",
+            "seedset" : "9"
+        },
+        "itervars" : {
+        },
+        "config" : [
+            { "network" : "HeavyTrafficLimits" },
+            { "sim-time-limit" : "100000s" },
+            { "repeat" : "20" },
+            { "replication-label" : "rep9" },
+            { "result-dir" : "results/lambda_2.0-switchProb_0.8-serviceTime_uniform(2s,4s)" },
+            { "warmup-period" : "30000s" },
+            { "**.source.lambda" : "2.0" },
+            { "**.router.switchProbability" : "0.8" },
+            { "**.server1.serviceTime" : "uniform(2s,4s)" },
+            { "**.server2.serviceTime" : "uniform(2s,4s)" },
+            { "**.server3.serviceTime" : "uniform(2s,4s)" },
+            { "**.server1.crashTime" : "500" },
+            { "**.server2.crashTime" : "750" },
+            { "**.server3.crashTime" : "1000" },
+            { "**.server1.queueLength.record" : "true" },
+            { "**.server1.serviceTime.record" : "true" },
+            { "**.server2.serviceTime.record" : "true" },
+            { "**.server3.serviceTime.record" : "true" }
+        ],
+        "scalars" : [
+            {
+                "module" : "HeavyTrafficLimits.sink",
+                "name" : "lifeTime:mean",
+                "value" : 49914.202848822,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "recordingmode" : "mean",
+                    "title" : "lifetime of arrived jobs, mean",
+                    "unit" : "s"
+                }
+            },
+            {
+                "module" : "HeavyTrafficLimits.sink",
+                "name" : "lifeTime:max",
+                "value" : 77119.190181451,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "recordingmode" : "max",
+                    "title" : "lifetime of arrived jobs, max",
+                    "unit" : "s"
+                }
+            },
+            {
+                "module" : "HeavyTrafficLimits.sink",
+                "name" : "lifeTime:min",
+                "value" : 22579.013751069,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "recordingmode" : "min",
+                    "title" : "lifetime of arrived jobs, min",
+                    "unit" : "s"
+                }
+            }
+        ]
+    }
+}

@@ -28,7 +28,7 @@ simple Server
              // how the next job will be choosen from the attached queues
         
         @signal[responseTime](type="simtime_t");
-        @statistic[responseTime](title="Response time";record=vector?,mean,max;interpolationmode=none;);     
+        @statistic[responseTime](title="Response time";record=vector?,histogram,mean,max;interpolationmode=none;);     
              
         double serviceTime @unit(s); // service time of a job
         
