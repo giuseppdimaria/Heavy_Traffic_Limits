@@ -17,13 +17,17 @@ Define_Module(Sink);
 void Sink::initialize()
 {
     lifeTimeSignal = registerSignal("lifeTime");
+    responseTimeSignal = registerSignal("responseTime");      // Registrazione del segnale per il tempo di risposta del Sistema
     keepJobs = par("keepJobs");
 }
 
 void Sink::handleMessage(cMessage *msg)
 {
     Job *job = check_and_cast<Job *>(msg);
+    simtime_t responseTime = simTime() - job->getCreationTime();
+
     // gather statistics
+    emit(responseTimeSignal, responseTime);  // Emit del segnale per il tempo di risposta
     emit(lifeTimeSignal, simTime() - job->getCreationTime());
 
 

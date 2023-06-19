@@ -19,6 +19,10 @@ simple Sink
         @display("i=block/sink");
         @signal[lifeTime](type="simtime_t");
         @statistic[lifeTime](title="lifetime of arrived jobs";unit=s;record=vector,mean,max,min;interpolationmode=none);
+        
+        @signal[responseTime](type="simtime_t");	// Segnale per il tempo di risposta
+        @statistic[responseTime](title="Response time";record=vector?,histogram,mean,max;interpolationmode=none;); 
+        
         bool keepJobs = false; // whether to keep the received jobs till the end of simulation
     gates:
         input in[];

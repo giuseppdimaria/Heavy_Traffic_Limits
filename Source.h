@@ -42,6 +42,7 @@ class QUEUEING_API Source : public SourceBase
 
         double lambda;
 
+
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;

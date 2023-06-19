@@ -21,6 +21,7 @@ class QUEUEING_API Sink : public cSimpleModule
 {
   private:
 	simsignal_t lifeTimeSignal;
+	simsignal_t responseTimeSignal;
 	bool keepJobs;
 
   protected:

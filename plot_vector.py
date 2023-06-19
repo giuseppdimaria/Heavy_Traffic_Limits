@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Read the CSV file
-df = pd.read_csv('Total_Data_Mean.csv', delimiter=',', encoding="utf-8-sig")
+df = pd.read_csv('lifeTime_mean.csv', delimiter=',', encoding="utf-8-sig")
 print(df)
 # Extract the confidence interval data
 mean = df['Mean']

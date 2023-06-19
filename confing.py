@@ -89,7 +89,6 @@ warmup-period = 30000s
 **.server3.crashTime = {server_crash_times["server3"]}
 # imposta il tempo di servizio esponenziale per la coda S1 del JobNetwork.
 **.S1.serviceTime = exponential({s1_exp_param["mean"]})
-**.server1.queueLength.record = true
 **.server1.serviceTime.record = true
 **.server2.serviceTime.record = true
 **.server3.serviceTime.record = true

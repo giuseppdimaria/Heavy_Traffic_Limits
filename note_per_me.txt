@@ -718,3 +718,16 @@ void Sink::finish()
 
 }; //namespace
 
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------
+Comando esportare csv
+
+
+
+command_1 = f"opp_scavetool export -f module=~*.sink -f lifeTime:* -o {output_file} -F CSV-R {input_file}"
+command_2 = f"opp_scavetool export -f module=~*.sink -f responseTime:* -o {output_file} -F CSV-R {input_file}"
+command_3 = f"opp_scavetool export -f module=~*.server -f responseTime:* -o {output_file} -F CSV-R {input_file}"
+command_4 = f"opp_scavetool export -f module=~*.server -f busy:* -o {output_file} -F CSV-R {input_file}"

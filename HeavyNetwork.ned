@@ -58,15 +58,4 @@ network HeavyTrafficLimits
         queue3.out++ --> server3.in++;
         server2.out --> sink.in++;
         server3.out --> sink.in++;
-
-        //server2.out --> queue.in++;
-        //server3.out --> queue.in++;
-        //queue.out --> sink.in++;
-
-        //source.out --> server1.in++;
-        //server1.out --> router.in;
-        //router.out[0] --> server2.in++;
-        //router.out[1] --> server3.in++;
-        //server2.out --> sink.in[0];
-        //server3.out --> sink.in[1];
 }
