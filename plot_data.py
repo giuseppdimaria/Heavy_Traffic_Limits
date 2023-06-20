@@ -9,7 +9,7 @@ import os
 plotta due grafici separati: uno per il tempo medio di permanenza nel sistema dei job e uno per il tempo massimo di permanenza,
 entrambi con i relativi intervalli di confidenza. I grafici vengono salvati nella cartella "charts" come file separati.
 """
-def plot_lifeTime():
+def plot_lifeTme():
     # Carica il file CSV
     data = pd.read_csv("lifeTime_mean.csv")
     
@@ -108,7 +108,7 @@ def plot_serverResponseTime():
     # Salvare il grafico
     if not os.path.exists('charts'):
         os.makedirs('charts')
-    plt.savefig('charts/responseTime_median.png')
+    plt.savefig('charts/server_response_time_median.png')
     
     # Mostra il grafico
     plt.show()
@@ -152,11 +152,11 @@ def plot_systemResponseTime():
     # Carica il file CSV specificando il delimitatore come '\t'
     data = pd.read_csv('system_response_time.csv')
     
-    # Calcola la mediana dei dati nella colonna 'Mean' per ciascun file
-    response_time_median = data['Mean']
-    
     # Seleziona solo i dati relativi alla colonna 'File'
-    file_names = data['File']
+    file_names = data['Name']
+    
+    # Seleziona solo i dati relativi alla colonna 'Mean' come valore delle barre
+    response_time_median = data['Mean']
     
     # Seleziona solo i dati relativi all'intervallo di confidenza del 95%
     conf_int_95_min = data['Min_ConfInt_t95']
@@ -167,22 +167,35 @@ def plot_systemResponseTime():
     conf_int_90_max = data['Max_ConfInt_t90']
     
     # Traccia i dati
-    plt.errorbar(file_names, response_time_median, yerr=[response_time_median - conf_int_95_min, conf_int_95_max - response_time_median], fmt='o', label='95% Confidence Interval')
-    plt.errorbar(file_names, response_time_median, yerr=[response_time_median - conf_int_90_min, conf_int_90_max - response_time_median], fmt='o', label='90% Confidence Interval')
-    plt.xlabel('File')
-    plt.ylabel('Median')
-    plt.title('System Response Time (Median)')
-    plt.xticks(rotation=90)
-    plt.legend()
+    x = np.arange(len(file_names))
+    width = 0.35
+
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, response_time_median, width, label='Median')
+    rects2 = ax.bar(x + width/2, conf_int_95_max - conf_int_95_min, width, yerr=[conf_int_95_min, conf_int_95_max], label='95% Confidence Interval')
+
+    ax.set_xlabel('Run di Simulazione')
+    ax.set_ylabel('Tempo')
+    ax.set_title('Tempo di Risposta del Sistema (Mediana) con Intervallo di Confidenza al 95%')
+    ax.set_xticks(x)
+    ax.set_xticklabels(file_names, rotation=90)
+    ax.legend()
+
     plt.tight_layout()
+    
+    # Salvare il grafico
+    if not os.path.exists('charts'):
+        os.makedirs('charts')
+    plt.savefig('charts/system_response_time_median.png')
     
     # Mostra il grafico
     plt.show()
 
 
 
+
 if __name__ == "__main__":
-    # plot_lifeTme()
-    # plot_serverResponseTime()
-    # plot_serverFactorUtilization()
+    plot_lifeTme()
+    plot_serverResponseTime()
+    plot_serverFactorUtilization()
     plot_systemResponseTime()
