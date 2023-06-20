@@ -12,16 +12,19 @@ def export_to_csv(input_file, root, dirs):
 
     param_folder = os.path.join(csv_folder, root)
     os.makedirs(param_folder, exist_ok=True)
+    
+    config_name = os.path.basename(root)  # Get the name of the configuration folder
+
 
     # csv_file = f"{csv_file_name}.csv"
-    output_file = os.path.join(param_folder, "lifeTime.csv")
-    output_file_2 = os.path.join(param_folder, "System_RT.csv")
-    output_file_3 = os.path.join(param_folder, "Server1_responseTime.csv")
-    output_file_4 = os.path.join(param_folder, "Server1_busy.csv")
-    output_file_5 = os.path.join(param_folder, "Server2_responseTime.csv")
-    output_file_6 = os.path.join(param_folder, "Server2_busy.csv")
-    output_file_7 = os.path.join(param_folder, "Server3_responseTime.csv")
-    output_file_8 = os.path.join(param_folder, "Server3_busy.csv")
+    output_file = os.path.join(param_folder, f"{config_name}_lifeTime.csv")
+    output_file_2 = os.path.join(param_folder, f"{config_name}_System_RT.csv")
+    output_file_3 = os.path.join(param_folder, f"{config_name}_Server1_responseTime.csv")
+    output_file_4 = os.path.join(param_folder, f"{config_name}_Server1_busy.csv")
+    output_file_5 = os.path.join(param_folder, f"{config_name}_Server2_responseTime.csv")
+    output_file_6 = os.path.join(param_folder, f"{config_name}_Server2_busy.csv")
+    output_file_7 = os.path.join(param_folder, f"{config_name}_Server3_responseTime.csv")
+    output_file_8 = os.path.join(param_folder, f"{config_name}_Server3_busy.csv")
 
     command = f"opp_scavetool export -f module=~*.sink -f lifeTime:* -o {output_file} -F CSV-R {input_file}"
     
@@ -37,8 +40,8 @@ def export_to_csv(input_file, root, dirs):
     command_8 = f"opp_scavetool export -f module=~*.server3 -f busy:* -o {output_file_8} -F CSV-R {input_file}"
     
     
-    # subprocess.run(command, shell=True)
-    subprocess.run(command_2, shell=True)
+    subprocess.run(command, shell=True)
+    # subprocess.run(command_2, shell=True)
     # subprocess.run(command_3, shell=True)
     # subprocess.run(command_4, shell=True)
     # subprocess.run(command_5, shell=True)

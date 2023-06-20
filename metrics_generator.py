@@ -16,8 +16,8 @@ t95 = 2.086     # Valore critico per l'intervallo di confidenza al 95%
 t90 = 1.725
 runs = 20
 
-lifeTime_index = 34
 
+lifeTime_index = 34
 
 def create_csv_lifeTimemean(DATA, log_level):
     logging.basicConfig(format='%(message)s', level=log_level)
@@ -62,9 +62,9 @@ def create_csv_lifeTimemean(DATA, log_level):
                 print('max_90: ', max_90)
                 print('\n\n')
         
-                data.append([file, name, round(mean, 3), round(std_dev, 3), round(variance, 3), round(std_err, 3),
+                data.append([replication, file, name, round(mean, 3), round(std_dev, 3), round(variance, 3), round(std_err, 3),
                                  round(min_95, 3), round(max_95, 3), round(min_90, 3), round(max_90, 3)])
-        df_data = pd.DataFrame(data, columns=['File', 'Name', 'Mean', 'Std_Dev', 'Variance', 'Std_Err', 'Min_ConfInt_t95', 'Max_ConfInt_t95',
+        df_data = pd.DataFrame(data, columns=['Replication', 'File', 'Name', 'Mean', 'Std_Dev', 'Variance', 'Std_Err', 'Min_ConfInt_t95', 'Max_ConfInt_t95',
                                               'Min_ConfInt_t90', 'Max_ConfInt_t90'])
         df_data = df_data.sort_values(by=['File', 'Name'], ascending=True)
         
@@ -208,7 +208,7 @@ def create_csv_server_responseTime(DATA, log_level):
 if __name__ == "__main__":
     
     # Extract data results with transient
-    # df_data_lifeTimemean = create_csv_lifeTimemean('./analysis_results/csv/results', logging.INFO)
+    df_data_lifeTimemean = create_csv_lifeTimemean('./analysis_results/csv/results', logging.INFO)
     # df_data_system_responseTime = create_csv_system_responseTime('./analysis_results/csv/results', logging.INFO)
     # df_data_server_busy = calculate_utilization_factor('./analysis_results/csv/results', logging.INFO)
-    df_data_server_responseTime = create_csv_server_responseTime('./analysis_results/csv/results', logging.INFO)
+    # df_data_server_responseTime = create_csv_server_responseTime('./analysis_results/csv/results', logging.INFO)
