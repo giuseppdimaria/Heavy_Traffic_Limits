@@ -62,9 +62,9 @@ def create_csv_lifeTimemean(DATA, log_level):
                 print('max_90: ', max_90)
                 print('\n\n')
         
-                data.append([replication, file, name, round(mean, 3), round(std_dev, 3), round(variance, 3), round(std_err, 3),
+                data.append([file, name, round(mean, 3), round(std_dev, 3), round(variance, 3), round(std_err, 3),
                                  round(min_95, 3), round(max_95, 3), round(min_90, 3), round(max_90, 3)])
-        df_data = pd.DataFrame(data, columns=['Replication', 'File', 'Name', 'Mean', 'Std_Dev', 'Variance', 'Std_Err', 'Min_ConfInt_t95', 'Max_ConfInt_t95',
+        df_data = pd.DataFrame(data, columns=['File', 'Name', 'Mean', 'Std_Dev', 'Variance', 'Std_Err', 'Min_ConfInt_t95', 'Max_ConfInt_t95',
                                               'Min_ConfInt_t90', 'Max_ConfInt_t90'])
         df_data = df_data.sort_values(by=['File', 'Name'], ascending=True)
         
@@ -86,7 +86,7 @@ def create_csv_system_responseTime(DATA, log_level):
     data = []
     for root, dirs, files in os.walk(DATA):
         for file in files:
-            if(file.endswith('System_responseTime.csv')):
+            if(file.endswith('System_RT.csv')):
                 csv_file = pd.read_csv(os.path.join(root, file))
                 # print(csv_file)
                 name = csv_file['name'][SRT_index].replace(':histogram', '')
@@ -176,11 +176,14 @@ def create_csv_server_responseTime(DATA, log_level):
         for file in files:
             if file.endswith('_responseTime.csv'):
                 csv_file = pd.read_csv(os.path.join(root, file))
-                server_number = file.split('_')[0][-1]
+                
+                server_number = file.split('_')[-2]
                 module = f'HeavyTrafficLimits.server{server_number}'
+                
                 filtered_data = csv_file[csv_file['module'] == module]
+                
                 values = filtered_data['value'].dropna()
-
+                
                 if not values.empty:
                     median = np.median(values)
                     interval_95 = np.percentile(values, [2.5, 97.5])
@@ -209,6 +212,6 @@ if __name__ == "__main__":
     
     # Extract data results with transient
     df_data_lifeTimemean = create_csv_lifeTimemean('./analysis_results/csv/results', logging.INFO)
-    # df_data_system_responseTime = create_csv_system_responseTime('./analysis_results/csv/results', logging.INFO)
-    # df_data_server_busy = calculate_utilization_factor('./analysis_results/csv/results', logging.INFO)
-    # df_data_server_responseTime = create_csv_server_responseTime('./analysis_results/csv/results', logging.INFO)
+    df_data_system_responseTime = create_csv_system_responseTime('./analysis_results/csv/results', logging.INFO)
+    df_data_server_busy = calculate_utilization_factor('./analysis_results/csv/results', logging.INFO)
+    df_data_server_responseTime = create_csv_server_responseTime('./analysis_results/csv/results', logging.INFO)

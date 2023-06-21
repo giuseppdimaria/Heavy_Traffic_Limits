@@ -70,15 +70,6 @@ def plot_serverResponseTime():
     # Carica il file CSV
     data = pd.read_csv("server_response_time.csv")
     
-    """
-    # Estrarre le colonne di interesse
-    median = data["Median"]
-    min_confint_90 = data["Min_ConfInt_90"]
-    max_confint_90 = data["Max_ConfInt_90"]
-    min_confint_95 = data["Min_ConfInt_95"]
-    max_confint_95 = data["Max_ConfInt_95"]
-    """
-    
     
     # Filtra i dati solo per i tre serventi del tuo sistema
     servers = ["Server1", "Server2", "Server3"]
@@ -135,7 +126,7 @@ def plot_serverFactorUtilization():
     plt.xlabel("Serventi")
     plt.ylabel("Fattore di Utilizzo")
     plt.title("Fattore di Utilizzo dei Singoli Server")
-    # plt.xticks(range(len(server)), server)  # Etichette degli assi x come nomi dei server
+    plt.xticks(range(len(server)), server)  # Etichette degli assi x come nomi dei server
     
     # Salvare il grafico
     if not os.path.exists('charts'):
@@ -178,7 +169,7 @@ def plot_systemResponseTime():
     ax.set_ylabel('Tempo')
     ax.set_title('Tempo di Risposta del Sistema (Mediana) con Intervallo di Confidenza al 95%')
     ax.set_xticks(x)
-    ax.set_xticklabels(file_names, rotation=90)
+    ax.set_xticklabels(x)
     ax.legend()
 
     plt.tight_layout()
@@ -192,10 +183,60 @@ def plot_systemResponseTime():
     plt.show()
 
 
+"""
+Crea un rettangolo colorato centrato sull'indice x[i] della barra corrispondente,
+con un'altezza che rappresenta il rapporto tra il periodo di warm-up (warmup_period)
+e il tempo di risposta medio per quella simulazione(response_time_mean.iloc[i]).
+
+In questo modo, il grafico a barre evidenzia il periodo del transiente iniziale rispetto alla media del tempo di risposta del sistema.
+"""
+def plot_transient():
+    # Carica il file CSV con i dati del tempo di risposta del sistema
+    data = pd.read_csv('system_response_time.csv')
+    
+    # Seleziona solo i dati relativi alla colonna 'File'
+    file_names = data['Name']
+    
+    # Seleziona solo i dati relativi alla colonna 'Mean' come valore delle barre
+    response_time_mean = data['Mean']
+    
+    # Imposta il periodo di warm-up fisso
+    warmup_period = 30000
+    
+    # Traccia i dati
+    x = np.arange(len(file_names))
+    width = 0.35
+    plt.bar(x, response_time_mean, width, label='Mean')
+    
+    # Aggiungi etichette e titoli
+    plt.xlabel('Run di Simulazione')
+    plt.ylabel('Tempo di Risposta (Media)')
+    plt.title('Transiente Iniziale - Tempo di Risposta del Sistema')
+    plt.xticks(x, rotation=90)
+    plt.legend()
+    
+    # Aggiungi rettangoli colorati per evidenziare il periodo di warm-up
+    for i in range(len(x)):
+        plt.axvspan(x[i] - 0.5, x[i] + 0.5, facecolor='lightgray', alpha=0.5, ymin=0, ymax=warmup_period / response_time_mean.iloc[i])
+    
+    # Salvare il grafico
+    if not os.path.exists('charts'):
+        os.makedirs('charts')
+    plt.savefig('charts/initial_transient.png')
+    
+    # Mostra il grafico
+    plt.show()
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
     plot_lifeTme()
-    plot_serverResponseTime()
-    plot_serverFactorUtilization()
-    plot_systemResponseTime()
+    # plot_serverResponseTime()
+    # plot_serverFactorUtilization()
+    # plot_systemResponseTime()
+    # plot_transient()

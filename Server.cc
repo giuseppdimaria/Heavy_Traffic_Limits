@@ -68,9 +68,9 @@ void Server::handleMessage(cMessage *msg)
 
         emit(responseTimeSignal, d);
 
-        // Esame di tutte le code di input e richiesta di un nuovo job da una coda non vuota
-        int k = selectionStrategy->select();
-        if (k >= 0) {       // Se è stata selezionata una coda valida
+
+        int k = selectionStrategy->select();            // Esame di tutte le code di input e richiesta di un nuovo job da una coda non vuota
+        if (k >= 0) {                                   // Se è stata selezionata una coda valida
             EV << "requesting job from queue " << k << endl;
             cGate *gate = selectionStrategy->selectableGate(k);
             check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->request(gate->getIndex());     // richiesta di un job alla coda
@@ -94,7 +94,7 @@ void Server::handleMessage(cMessage *msg)
                     bubble("Dropped!");
                 emit(droppedForDeadlineSignal, 1);      // Emittente del segnale "droppedForDeadline" con valore 1
 
-                delete msg;     // dealloca messaggio
+                delete msg;                             // dealloca messaggio
 
                 allocated = false;
                 jobServiced = nullptr;

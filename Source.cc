@@ -14,8 +14,8 @@ namespace queueing {
 
 void SourceBase::initialize()
 {
-    createdSignal = registerSignal("created");
-    jobCounter = 0;
+    createdSignal = registerSignal("created");      // registra il segnale 'created' per tenere traccia del numero di job creati
+    jobCounter = 0;                                 // variabile per mantenere il conteggio dei job creati
     WATCH(jobCounter);
     jobName = par("jobName").stringValue();
     if (jobName == "")
@@ -48,7 +48,7 @@ void Source::initialize()
     numJobs = par("numJobs");
     lambda = par("lambda");
 
-    // schedula the first message timer for start time
+// schedulato il primo messaggio di timer per il tempo di inizio.
     scheduleAt(startTime, new cMessage("newJobTimer"));
 }
 

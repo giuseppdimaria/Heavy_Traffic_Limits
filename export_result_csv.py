@@ -40,20 +40,20 @@ def export_to_csv(input_file, root, dirs):
     command_8 = f"opp_scavetool export -f module=~*.server3 -f busy:* -o {output_file_8} -F CSV-R {input_file}"
     
     
-    subprocess.run(command, shell=True)
+    # subprocess.run(command, shell=True)
     # subprocess.run(command_2, shell=True)
-    # subprocess.run(command_3, shell=True)
+    subprocess.run(command_3, shell=True)
     # subprocess.run(command_4, shell=True)
-    # subprocess.run(command_5, shell=True)
+    subprocess.run(command_5, shell=True)
     # subprocess.run(command_6, shell=True)
-    # subprocess.run(command_7, shell=True)
+    subprocess.run(command_7, shell=True)
     # subprocess.run(command_8, shell=True)
 
 # Recursive function to execute ScaveTool command on .sca files in the folder and subfolders
 def process_files(folder):
     for root, dirs, files in os.walk(folder):
         for file in files:
-            if file.endswith(".sca") or file.endswith(".vec"):
+            if file.endswith(".sca"):# or file.endswith(".vec"):
                 input_file = os.path.join(root, file)
                 export_to_csv(input_file, root, dirs)
 
